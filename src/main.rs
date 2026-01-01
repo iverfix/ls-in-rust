@@ -10,10 +10,11 @@
 //
 // Outwards dependencies: Terminal "gui" interface (for fetching terminal sizes), file system interface
 
+pub mod argumentparser;
 pub mod display;
 pub mod filesystem;
 
-use crate::display::create_entry_string;
+use crate::{argumentparser::parse_args, display::create_entry_string};
 use std::fs::{self, DirEntry};
 
 fn fetch_file_content(path: &str) -> Vec<DirEntry> {
@@ -21,6 +22,8 @@ fn fetch_file_content(path: &str) -> Vec<DirEntry> {
     dir_entries.flatten().collect()
 }
 fn main() {
+    let config = parse_args();
+
     let files = fetch_file_content(".");
 
     for file in files {
@@ -29,4 +32,6 @@ fn main() {
             create_entry_string(&file).unwrap_or(String::from(" "))
         )
     }
+
+    println!("Config {}", config.show_hidden_entries);
 }
