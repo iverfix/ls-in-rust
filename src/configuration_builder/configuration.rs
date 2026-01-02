@@ -19,10 +19,4 @@ pub struct LsConfig {
     pub long_list_settings: Option<LongListSettings>,
 }
 
-pub fn parse_args() -> LsConfig {
-    LsConfig {
-        show_hidden_entries: false,
-        format: LsFormat::Grid,
-        long_list_settings: None,
-    }
-}
+fn flag_g(config: &mut LsConfig) {}

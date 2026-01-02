@@ -10,11 +10,11 @@
 //
 // Outwards dependencies: Terminal "gui" interface (for fetching terminal sizes), file system interface
 
-pub mod argumentparser;
+pub mod configuration_builder;
 pub mod display;
 pub mod filesystem;
 
-use crate::{argumentparser::parse_args, display::create_entry_string};
+use crate::{configuration_builder::parse_args, display::create_entry_string};
 use std::fs::{self, DirEntry};
 
 fn fetch_file_content(path: &str) -> Vec<DirEntry> {
@@ -23,6 +23,8 @@ fn fetch_file_content(path: &str) -> Vec<DirEntry> {
 }
 fn main() {
     let config = parse_args();
+
+    configuration_builder::build_configuration();
 
     let files = fetch_file_content(".");
 
