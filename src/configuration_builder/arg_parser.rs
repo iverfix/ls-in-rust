@@ -1,30 +1,26 @@
-use std::{collections::HashMap, env};
+use super::flag::Flag;
+use std::env;
 
-const VALID_FLAGS: [&str; 5] = ["a", "g", "G", "l", "o"];
+pub fn parse_cli_arguments() -> Vec<Flag> {
+    env::args()
+        .skip(1)
+        .filter_map(|arg| {
+            let parse_result = if let Some(flag) = arg.strip_prefix("--") {
+                Flag::try_from_long(flag)
+            } else if let Some(flag) = arg.strip_prefix("-") {
+                Flag::try_from(flag)
+            } else {
+                println!("Could not find flag");
+                return None;
+            };
 
-fn long_to_short_format() -> HashMap<String, String> {
-    let mut map: HashMap<String, String> = HashMap::new();
-    map.insert("all".to_string(), "a".to_string());
-    map.insert("no-group".to_string(), "G".to_string());
-
-    map
-}
-
-pub fn parse_cli_arguments() -> Vec<String> {
-    let long_map = long_to_short_format();
-    let mut output = Vec::new();
-
-    for arg in env::args().skip(1) {
-        if let Some(flag) = arg.strip_prefix("--").and_then(|flag| long_map.get(flag)) {
-            output.push(flag.clone());
-        } else if let Some(flag) = arg.strip_prefix("-")
-            && VALID_FLAGS.contains(&flag)
-        {
-            output.push(flag.to_string());
-        } else {
-            println!("Could not find flag");
-        }
-    }
-
-    output
+            match parse_result {
+                Ok(flag) => Some(flag),
+                Err(_) => {
+                    eprintln!("Unknown flag: {}", arg);
+                    None
+                }
+            }
+        })
+        .collect()
 }

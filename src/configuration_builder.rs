@@ -1,6 +1,7 @@
 use configuration::LsConfig;
 pub mod arg_parser;
 pub mod configuration;
+pub mod flag;
 
 // Separaate argument parsing and configuration builder through flags
 

@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use super::flag::Flag;
 
 pub enum LsFormat {
     Grid,
@@ -46,29 +46,20 @@ impl Default for LsConfig {
     }
 }
 
-pub fn build_config(cli_args: Vec<String>) -> LsConfig {
+pub fn build_config(cli_flags: Vec<Flag>) -> LsConfig {
     let mut config = LsConfig::default();
-    let function_map = build_functional_map();
 
-    for arg in cli_args {
-        match function_map.get(&arg) {
-            Some(function) => function(&mut config),
-            _ => println!("Could not find flag"),
+    for flag in cli_flags {
+        match flag {
+            Flag::G => flag_g(&mut config),
+            Flag::CapG => flag_cap_g(&mut config),
+            Flag::O => flag_o(&mut config),
+            Flag::L => flag_l(&mut config),
+            Flag::A => flag_a(&mut config),
         }
     }
 
     config
-}
-
-fn build_functional_map() -> HashMap<String, fn(&mut LsConfig)> {
-    let mut map: HashMap<String, fn(&mut LsConfig)> = HashMap::new();
-    map.insert("g".to_string(), flag_g);
-    map.insert("G".to_string(), flag_cap_g);
-    map.insert("o".to_string(), flag_o);
-    map.insert("l".to_string(), flag_l);
-    map.insert("a".to_string(), flag_a);
-
-    map
 }
 
 fn flag_g(config: &mut LsConfig) {
@@ -86,11 +77,11 @@ fn flag_cap_g(config: &mut LsConfig) {
 }
 
 fn flag_o(config: &mut LsConfig) {
-    let mut long_config = LongListSettings::enable_all();
-    long_config.show_owner_group = false;
-
     config.format = LsFormat::Long;
-    config.long_list_settings = Some(long_config);
+    let long_config = config
+        .long_list_settings
+        .get_or_insert_with(LongListSettings::enable_all);
+    long_config.show_owner_group = false;
 }
 
 fn flag_l(config: &mut LsConfig) {
