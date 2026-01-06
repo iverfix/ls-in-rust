@@ -3,6 +3,7 @@ pub enum LsFormat {
     Long,
 }
 
+#[derive(Default)]
 pub struct LongListSettings {
     show_filename: bool,
     show_owner_group: bool,
@@ -23,18 +24,6 @@ impl LongListSettings {
             show_byte_size: true,
             show_write_time: true,
             show_num_hard_links: true,
-        }
-    }
-
-    fn default() -> Self {
-        Self {
-            show_filename: false,
-            show_owner_group: false,
-            show_user_group: false,
-            show_permissions: false,
-            show_byte_size: false,
-            show_write_time: false,
-            show_num_hard_links: false,
         }
     }
 }
