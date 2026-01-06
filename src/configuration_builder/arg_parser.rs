@@ -16,16 +16,12 @@ pub fn parse_cli_arguments() -> Vec<String> {
     let mut output = Vec::new();
 
     for arg in env::args().skip(1) {
-        if let Some(key) = arg.strip_prefix("--").and_then(|key| long_map.get(key)) {
-            if !VALID_FLAGS.contains(&key.as_str()) {
-                continue;
-            }
-            output.push(key.clone());
-        } else if let Some(key) = arg.strip_prefix("-") {
-            if !VALID_FLAGS.contains(&key) {
-                continue;
-            }
-            output.push(key.to_string());
+        if let Some(flag) = arg.strip_prefix("--").and_then(|flag| long_map.get(flag)) {
+            output.push(flag.clone());
+        } else if let Some(flag) = arg.strip_prefix("-")
+            && VALID_FLAGS.contains(&flag)
+        {
+            output.push(flag.to_string());
         }
     }
 
