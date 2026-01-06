@@ -4,7 +4,6 @@ const VALID_FLAGS: [&str; 5] = ["a", "g", "G", "l", "o"];
 
 fn long_to_short_format() -> HashMap<String, String> {
     let mut map: HashMap<String, String> = HashMap::new();
-
     map.insert("all".to_string(), "a".to_string());
     map.insert("no-group".to_string(), "G".to_string());
 
