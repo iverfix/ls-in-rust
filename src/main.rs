@@ -14,7 +14,7 @@ pub mod configuration_builder;
 pub mod display;
 pub mod filesystem;
 
-use crate::{configuration_builder::parse_args, display::create_entry_string};
+use crate::{configuration_builder::build_configuration, display::create_entry_string};
 use std::fs::{self, DirEntry};
 
 fn fetch_file_content(path: &str) -> Vec<DirEntry> {
@@ -22,11 +22,11 @@ fn fetch_file_content(path: &str) -> Vec<DirEntry> {
     dir_entries.flatten().collect()
 }
 fn main() {
-    let config = parse_args();
-
-    configuration_builder::build_configuration();
+    let config = build_configuration();
 
     let files = fetch_file_content(".");
+
+    println!("{}", config.show_hidden_entries);
 
     for file in files {
         println!(

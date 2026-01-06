@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 pub enum LsFormat {
     Grid,
     Long,
@@ -34,8 +36,43 @@ pub struct LsConfig {
     pub long_list_settings: Option<LongListSettings>,
 }
 
+impl Default for LsConfig {
+    fn default() -> Self {
+        Self {
+            show_hidden_entries: false,
+            format: LsFormat::Grid,
+            long_list_settings: None,
+        }
+    }
+}
+
+pub fn build_config(cli_args: Vec<String>) -> LsConfig {
+    let mut config = LsConfig::default();
+    let function_map = build_functional_map();
+
+    for arg in cli_args {
+        match function_map.get(&arg) {
+            Some(function) => function(&mut config),
+            _ => println!("Could not find flag"),
+        }
+    }
+
+    config
+}
+
+fn build_functional_map() -> HashMap<String, fn(&mut LsConfig)> {
+    let mut map: HashMap<String, fn(&mut LsConfig)> = HashMap::new();
+    map.insert("g".to_string(), flag_g);
+    map.insert("G".to_string(), flag_cap_g);
+    map.insert("o".to_string(), flag_o);
+    map.insert("l".to_string(), flag_l);
+    map.insert("a".to_string(), flag_a);
+
+    map
+}
+
 fn flag_g(config: &mut LsConfig) {
-    config.show_hidden_entries = true;
+    config.show_hidden_entries = false;
     config.format = LsFormat::Long;
     config.long_list_settings = Some(LongListSettings::enable_all());
 }

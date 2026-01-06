@@ -21,6 +21,8 @@ pub fn parse_cli_arguments() -> Vec<String> {
             && VALID_FLAGS.contains(&flag)
         {
             output.push(flag.to_string());
+        } else {
+            println!("Could not find flag");
         }
     }
 
