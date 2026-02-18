@@ -1,6 +1,6 @@
 use crate::display::EntryError;
+use crate::display::string_formating::get_colored_string;
 use crate::filesystem::fetch_entry_data;
-use crate::filesystem::get_colored_string;
 use std::fs::DirEntry;
 
 pub fn display_long_format(entry: &DirEntry) -> Result<String, EntryError> {

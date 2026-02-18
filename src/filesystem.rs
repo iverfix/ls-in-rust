@@ -2,7 +2,7 @@ use std::fs::DirEntry;
 use std::os::unix::fs::MetadataExt;
 use users::{get_group_by_gid, get_user_by_uid};
 
-enum EntryType {
+pub enum EntryType {
     Directory,
     Symlink,
     Executable,
@@ -10,7 +10,7 @@ enum EntryType {
 }
 
 impl EntryType {
-    fn ansi_color_code(&self) -> &'static str {
+    pub fn ansi_color_code(&self) -> &'static str {
         match self {
             EntryType::Directory => "1;34",
             EntryType::Symlink => "1;32",
@@ -25,26 +25,6 @@ pub struct Entry {
     pub group_name: String,
     pub n_hard_links: i32,
     pub entry_type: EntryType,
-}
-
-pub fn get_colored_string(entry: &DirEntry) -> std::io::Result<String> {
-    let metadata = entry.metadata()?;
-    let filetype;
-    if metadata.is_file() {
-        filetype = EntryType::File;
-    } else if metadata.is_symlink() {
-        filetype = EntryType::Symlink;
-    } else if metadata.is_dir() {
-        filetype = EntryType::Directory;
-    } else {
-        filetype = EntryType::Executable;
-    }
-
-    Ok(format!(
-        "\x1b[{}m{}\x1b[0m",
-        filetype.ansi_color_code(),
-        entry.file_name().to_string_lossy()
-    ))
 }
 
 pub fn fetch_entry_data(dir_entry: &DirEntry) -> std::io::Result<Entry> {

@@ -1,4 +1,4 @@
-use crate::{display::EntryError, filesystem::get_colored_string};
+use crate::display::{EntryError, string_formating::get_colored_string};
 use std::fs::DirEntry;
 
 pub fn display_short(entry: &DirEntry) -> Result<String, EntryError> {

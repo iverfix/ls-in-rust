@@ -8,6 +8,7 @@ use std::time;
 
 mod long_format;
 mod short_format;
+mod string_formating;
 
 pub enum EntryError {
     Io(),
