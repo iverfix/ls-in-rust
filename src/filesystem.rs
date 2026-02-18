@@ -1,4 +1,6 @@
 use std::fs::DirEntry;
+use std::os::unix::fs::MetadataExt;
+use users::{get_group_by_gid, get_user_by_uid};
 
 enum EntryType {
     Directory,
@@ -16,6 +18,13 @@ impl EntryType {
             EntryType::File => "",
         }
     }
+}
+
+pub struct Entry {
+    pub user_name: String,
+    pub group_name: String,
+    pub n_hard_links: i32,
+    pub entry_type: EntryType,
 }
 
 pub fn get_colored_string(entry: &DirEntry) -> std::io::Result<String> {
@@ -36,4 +45,26 @@ pub fn get_colored_string(entry: &DirEntry) -> std::io::Result<String> {
         filetype.ansi_color_code(),
         entry.file_name().to_string_lossy()
     ))
+}
+
+pub fn fetch_entry_data(dir_entry: &DirEntry) -> std::io::Result<Entry> {
+    let metadata = dir_entry.metadata()?;
+
+    let user_id = metadata.uid();
+    let group_id = metadata.gid();
+
+    let user_name = get_user_by_uid(user_id)
+        .map(|user| user.name().to_string_lossy().to_string())
+        .unwrap_or_default();
+
+    let group_name = get_group_by_gid(group_id)
+        .map(|group| group.name().to_string_lossy().to_string())
+        .unwrap_or_default();
+
+    Ok(Entry {
+        user_name,
+        group_name,
+        n_hard_links: 0,
+        entry_type: EntryType::Executable,
+    })
 }

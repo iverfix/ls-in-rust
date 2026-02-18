@@ -26,8 +26,6 @@ fn main() {
 
     let files = fetch_file_content(".");
 
-    println!("{}", config.show_hidden_entries);
-
     for file in files {
         println!(
             "{}",
