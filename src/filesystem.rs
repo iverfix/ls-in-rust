@@ -12,19 +12,19 @@ pub enum EntryType {
 pub struct Entry {
     pub user_name: String,
     pub group_name: String,
-    pub n_hard_links: i32,
+    pub n_hard_links: u64,
     pub entry_type: EntryType,
     pub file_name: String,
 }
 
 fn parse_entry_type(dir_entry: &DirEntry) -> EntryType {
-    match dir_entry.metadata() {
-        Ok(metadata) => {
-            if metadata.is_dir() {
+    match dir_entry.file_type() {
+        Ok(file_type) => {
+            if file_type.is_dir() {
                 EntryType::Directory
-            } else if metadata.is_symlink() {
+            } else if file_type.is_symlink() {
                 EntryType::Symlink
-            } else if metadata.is_file() {
+            } else if file_type.is_file() {
                 EntryType::File
             } else {
                 EntryType::Executable
@@ -50,7 +50,7 @@ fn parse_entry(dir_entry: &DirEntry) -> std::io::Result<Entry> {
     Ok(Entry {
         user_name,
         group_name,
-        n_hard_links: 0,
+        n_hard_links: metadata.nlink(),
         entry_type: parse_entry_type(dir_entry),
         file_name,
     })
