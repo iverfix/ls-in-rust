@@ -2,7 +2,7 @@ pub mod configuration_builder;
 pub mod display;
 pub mod filesystem;
 
-use crate::{configuration_builder::build_configuration, display::create_entry_string};
+use crate::configuration_builder::build_configuration;
 use std::fs::{self, DirEntry};
 
 fn fetch_file_content(path: &str) -> Vec<DirEntry> {
@@ -15,9 +15,6 @@ fn main() {
     let files = fetch_file_content(".");
 
     for file in files {
-        println!(
-            "{}",
-            create_entry_string(&file).unwrap_or(String::from(" "))
-        )
+        display::display(&file, &config);
     }
 }
