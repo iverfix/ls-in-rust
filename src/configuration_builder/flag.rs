@@ -36,3 +36,17 @@ impl TryFrom<&str> for Flag {
         }
     }
 }
+
+impl TryFrom<char> for Flag {
+    type Error = FlagParseError;
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        match value {
+            'g' => Ok(Flag::G),
+            'G' => Ok(Flag::CapG),
+            'o' => Ok(Flag::O),
+            'l' => Ok(Flag::L),
+            'a' => Ok(Flag::A),
+            _ => Err(FlagParseError::UnknownFlag(value.to_string())),
+        }
+    }
+}
