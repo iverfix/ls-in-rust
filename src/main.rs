@@ -20,6 +20,4 @@ fn main() {
             create_entry_string(&file).unwrap_or(String::from(" "))
         )
     }
-
-    println!("Config {}", config.show_hidden_entries);
 }
