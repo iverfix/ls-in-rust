@@ -1,7 +1,7 @@
 use crate::configuration_builder::configuration::LsConfig;
 use crate::configuration_builder::configuration::LsFormat;
 use crate::display::long_format::display_long_format;
-use crate::display::short_format::display_short;
+use crate::display::short_format::display_short_format;
 use crate::filesystem::Entry;
 use std::io;
 use std::time;
@@ -27,13 +27,9 @@ impl From<time::SystemTimeError> for EntryError {
     }
 }
 
-pub fn display(entry: &Entry, configuration: &LsConfig) {
-    let display_string = match configuration.format {
-        LsFormat::Grid => display_short(entry),
-        LsFormat::Long => display_long_format(entry),
-    };
-
-    if let Ok(display) = display_string {
-        println!("{}", display)
+pub fn display(entries: &Vec<Entry>, configuration: &LsConfig) {
+    match configuration.format {
+        LsFormat::Grid => display_short_format(entries),
+        LsFormat::Long => display_long_format(entries),
     }
 }

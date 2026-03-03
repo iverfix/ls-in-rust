@@ -8,9 +8,7 @@ fn main() -> Result<(), String> {
     let config = build_configuration()?;
     let files = fetch_entries(".");
 
-    for file in files {
-        display::display(&file, &config);
-    }
+    display::display(&files, &config);
 
     Ok(())
 }

@@ -15,6 +15,7 @@ pub struct Entry {
     pub n_hard_links: u64,
     pub entry_type: EntryType,
     pub file_name: String,
+    pub blocks: u64,
 }
 
 fn parse_entry_type(dir_entry: &DirEntry) -> EntryType {
@@ -53,6 +54,7 @@ fn parse_entry(dir_entry: &DirEntry) -> std::io::Result<Entry> {
         n_hard_links: metadata.nlink(),
         entry_type: parse_entry_type(dir_entry),
         file_name,
+        blocks: metadata.blocks(),
     })
 }
 
