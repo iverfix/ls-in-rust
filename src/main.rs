@@ -6,9 +6,9 @@ use crate::{configuration_builder::build_configuration, filesystem::fetch_entrie
 
 fn main() -> Result<(), String> {
     let config = build_configuration()?;
-    let files = fetch_entries(".");
+    let mut files = fetch_entries(".");
 
-    display::display(&files, &config);
+    display::display(&mut files, &config);
 
     Ok(())
 }

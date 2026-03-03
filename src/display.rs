@@ -27,7 +27,7 @@ impl From<time::SystemTimeError> for EntryError {
     }
 }
 
-pub fn display(entries: &Vec<Entry>, configuration: &LsConfig) {
+pub fn display(entries: &mut Vec<Entry>, configuration: &LsConfig) {
     match configuration.format {
         LsFormat::Grid => display_short_format(entries),
         LsFormat::Long => display_long_format(entries),

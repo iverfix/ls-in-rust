@@ -2,9 +2,11 @@ use crate::display::EntryError;
 use crate::display::string_formating::get_colored_string;
 use crate::filesystem::Entry;
 
-pub fn display_long_format(entries: &Vec<Entry>) {
+pub fn display_long_format(entries: &mut Vec<Entry>) {
     let total: u64 = entries.iter().map(|e| e.blocks).sum();
     println!("Total: {}", total);
+
+    entries.sort_by(|a, b| a.file_name.cmp(&b.file_name));
 
     for entry in entries {
         let entry_string = create_entry_string(entry).unwrap_or_default();
